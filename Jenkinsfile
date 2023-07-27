@@ -29,13 +29,17 @@ pipeline {
 
 		stage("Push to Registry") {
 			steps{
-				sh "echo pushing..."
+				script {
+					sh 'docker tag josiokoko/timeserver docker.io/josiokoko/efosaserver:$BUILD_ID'
+					sh 'docker push docker.io/josiokoko/efosaserver:$BUILD_ID'
+				}
 			}
 		}
 
 		stage("Cleanup") {
 			steps{
-				sh "echo cleanup..."
+				sh 'docker rmi -f $(docker image ls -aq)'
+				sh 'docker logout'
 			}
 		}
 
